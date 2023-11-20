@@ -488,3 +488,35 @@ void LongNumb::generateRandomHex(int length) {
     }
 }
 
+void LongNumb::Print() const {
+    int mostSignificantDigit = array_size - 1;
+
+
+    while (mostSignificantDigit >= 0 && data[mostSignificantDigit] == 0) {
+        mostSignificantDigit--;
+    }
+
+    if (mostSignificantDigit < 0) {
+
+        std::cout << "0";
+    }
+    else {
+
+        for (int i = mostSignificantDigit; i >= 0; i--) {
+            std::cout << std::hex << std::setw(4) << std::setfill('0') << data[i];
+        }
+    }
+
+    std::cout << std::endl;
+}
+
+void LongNumb::appendChar(char hexDigit) {
+    uint16_t value = hexDigitToUint16(hexDigit);
+
+    for (int i = array_size - 1; i > 0; i--) {
+        data[i] = (data[i - 1] << 4) | (data[i] >> 12);
+    }
+
+    data[0] = (data[0] & 0x0FFF) | (value << 12);
+}
+

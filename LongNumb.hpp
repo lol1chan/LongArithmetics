@@ -39,6 +39,8 @@ public:
     int DigitLength() const;
     void generateRandomHex(int length);
 
+    void appendChar(char hexDigit);
+
     LongNumb& operator = (const LongNumb& other);
     LongNumb operator + (const LongNumb& other);
     LongNumb operator - (const LongNumb& other);
@@ -56,26 +58,6 @@ public:
     bool operator <= (const LongNumb& other);
     bool operator >= (const LongNumb& other);
     
-    void Print() const {
-        int mostSignificantDigit = array_size - 1;
-
-        
-        while (mostSignificantDigit >= 0 && data[mostSignificantDigit] == 0) {
-            mostSignificantDigit--;
-        }
-
-        if (mostSignificantDigit < 0) {
-            
-            std::cout << "0";
-        }
-        else {
-            
-            for (int i = mostSignificantDigit; i >= 0; i--) {
-                std::cout << std::hex << std::setw(4) << std::setfill('0') << data[i];
-            }
-        }
-
-        std::cout << std::endl;
-    }
+    void Print() const;
 
 };
