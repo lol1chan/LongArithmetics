@@ -78,7 +78,7 @@ int main() {
 
     //test operations
 
-    LongNumb A("09AB3F8C67D2E051FA07D49A2B4B7E384AB30F3E5AEC853D01");
+    /*LongNumb A("09AB3F8C67D2E051FA07D49A2B4B7E384AB30F3E5AEC853D01");
     LongNumb B("05C1A9D8B42F670E29D6A53C8E910B684F2A45BCCD760FADE");
     LongNumb C("0382E9AF61B4D73C8958D46A270FCE5297D1C418AFCFA20232B");
     LongNumb D("4");
@@ -160,11 +160,11 @@ int main() {
     }
     else {
         cout << "Test 8: ToPower (E^D) test failed.\n";
-    }
+    }*/
 
     //time tests
 
-    vector<int> lengths = { 2, 50 };
+    /*vector<int> lengths = { 2, 50 };
 
     for (const auto& length : lengths) {
         runTests(length);
@@ -175,6 +175,42 @@ int main() {
 
     cout << "Test time:" << endl;
 
-    return 0;
+    return 0;*/
+
+LongNumb num2("0x3e3d9a7f43698b6057bf789e640c2b779a6990ca3b323b89fba7297f5e9c86e635ec6b5f859c1a6144066ed009e884d7db0c82d79c306fc3745240ff8a31240923c8db248f05a4003ec9ef8e579636c2ad9561f24d2328d0ffbe3b3c66bd003d8150fee34de21a037af10fa5cd66042294404c3fcd5eac9eee462611cf479df7");
+LongNumb num1("0x49e8fbc709682fd27b5374521000a9f7a84c1e31156eaf661db2cef3e738e9a05ed540487a805dd5098d19b5dd1eed610cff655279e2be39fb520c7713eb41258886210005a46e6de9311231b85da6d4f32c028847aa64bc04458861be442512db2056bae4a1d44d10d7013ddb5f8dcab1cc17f535d080974a219d4b0177fbf9");
+
+LongNumb sum = num1 + num2;
+cout << "num1 + num2 = ";
+sum.Print();
+
+LongNumb difference = num1 - num2;
+cout << "num1 - num2 = ";
+difference.Print();
+
+LongNumb product = num1 * num2;
+cout << "num1 * num2 = ";
+product.Print();
+
+LongNumb quotient = num1 / num2;
+cout << "num1 / num2 = ";
+quotient.Print();
+
+LongNumb remainder = num1 % num2;
+cout << "num1 mod num2 = ";
+remainder.Print();
+
+cout << "\t" << endl;
+
+//LongNumb squared = num1.LongPowerWindow(num1, LongNumb(2));
+//cout << "num1 ^ 2 = ";
+//squared.Print();
+//
+//LongNumb power = num1.LongPowerWindow(num1, LongNumb(9));
+//cout << "num1 ^ 9 = ";
+//power.Print();
+
+cout << "\t" << endl;
+cout << "\t" << endl;
 }
 

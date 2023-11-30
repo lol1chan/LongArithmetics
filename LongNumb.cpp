@@ -180,34 +180,35 @@ LongNumb LongNumb::operator+ (const LongNumb& other)
     return sum;
 }
 
-LongNumb LongNumb::operator- (const LongNumb& other)
-{
-    LongNumb result;
-    int16_t borrow = 0;
-
-    for (int i = 0; i < array_size; i++)
-    {
-        int32_t temp = static_cast<int32_t>(data[i]) - other.data[i] - borrow;
-        if (temp < 0)
-        {
-            result.data[i] = static_cast<uint16_t>(temp + 0x10000); 
-            borrow = 1;
-        }
-        else
-        {
-            result.data[i] = static_cast<uint16_t>(temp);
-            borrow = 0;
-        }
+LongNumb LongNumb::operator- (const LongNumb& other) {
+    if (*this < other) {
+        std::cerr << "Do not subtract a larger number from a smaller one" << std::endl;
+        return LongNumb();
     }
+    else {
+        LongNumb result;
+        int16_t borrow = 0;
 
-   
-    for (int i = 0; i < array_size; i++) {
-        if (result.data[i] < 0) {
-            result.data[i] = 0;
+        for (int i = 0; i < array_size; i++) {
+            int32_t temp = static_cast<int32_t>(data[i]) - other.data[i] - borrow;
+            if (temp < 0) {
+                result.data[i] = static_cast<uint16_t>(temp + 0x10000);
+                borrow = 1;
+            }
+            else {
+                result.data[i] = static_cast<uint16_t>(temp);
+                borrow = 0;
+            }
         }
-    }
 
-    return result;
+        for (int i = 0; i < array_size; i++) {
+            if (result.data[i] < 0) {
+                result.data[i] = 0;
+            }
+        }
+
+        return result;
+    }
 }
 
 
@@ -516,7 +517,6 @@ void LongNumb::appendChar(char hexDigit) {
     for (int i = array_size - 1; i > 0; i--) {
         data[i] = (data[i - 1] << 4) | (data[i] >> 12);
     }
-
     data[0] = (data[0] & 0x0FFF) | (value << 12);
 }
 
