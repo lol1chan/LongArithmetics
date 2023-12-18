@@ -74,6 +74,8 @@ void runTests(T length) {
     cout << "\t" << endl;
 }
 
+
+
 int main() {
 
     //test operations
@@ -160,15 +162,16 @@ int main() {
     }
     else {
         cout << "Test 8: ToPower (E^D) test failed.\n";
-    }*/
+    }
+ 
 
-    //time tests
-
-    /*vector<int> lengths = { 2, 50 };
+    vector<int> lengths = { 2, 50 };
 
     for (const auto& length : lengths) {
         runTests(length);
     }
+
+    runTests(2);
 
     cout << "\t" << endl;
     cout << "\t" << endl;
@@ -177,31 +180,32 @@ int main() {
 
     return 0;*/
 
-LongNumb num2("0x3e3d9a7f43698b6057bf789e640c2b779a6990ca3b323b89fba7297f5e9c86e635ec6b5f859c1a6144066ed009e884d7db0c82d79c306fc3745240ff8a31240923c8db248f05a4003ec9ef8e579636c2ad9561f24d2328d0ffbe3b3c66bd003d8150fee34de21a037af10fa5cd66042294404c3fcd5eac9eee462611cf479df7");
-LongNumb num1("0x49e8fbc709682fd27b5374521000a9f7a84c1e31156eaf661db2cef3e738e9a05ed540487a805dd5098d19b5dd1eed610cff655279e2be39fb520c7713eb41258886210005a46e6de9311231b85da6d4f32c028847aa64bc04458861be442512db2056bae4a1d44d10d7013ddb5f8dcab1cc17f535d080974a219d4b0177fbf9");
-
-LongNumb sum = num1 + num2;
-cout << "num1 + num2 = ";
-sum.Print();
-
-LongNumb difference = num1 - num2;
-cout << "num1 - num2 = ";
-difference.Print();
-
-LongNumb product = num1 * num2;
-cout << "num1 * num2 = ";
-product.Print();
-
-LongNumb quotient = num1 / num2;
-cout << "num1 / num2 = ";
-quotient.Print();
-
-LongNumb remainder = num1 % num2;
-cout << "num1 mod num2 = ";
-remainder.Print();
-
-cout << "\t" << endl;
-
+//
+//LongNumb num1("23C0D0050AE991EF232C32AA88639EF38290F68434288F9C4BF429FE499B9220ABCA87E41472A1E15199B20E6CFDFE13CBB4E1F9358760F04A0FD9EA8A2B5A98E2CF08A5D0BFCC4C75B0F0A7F7BC57EFBDF2ACDC6CA08F63DA3B3A040CFA1AABC5F07A4B843282AD6E6FD1ECB9A00800F46446DCD357ACA4BE192CBF38282A9A");
+//LongNumb num2("1604077CEA1866B49C76BA21B38F3F0DE1DA56A26E876A4C5236EA0EB2B4C9BE1CF0CAD51CD5310E778A3A464E252B7215F3BE74DCFAB0C09DEDE3FA462A06C");
+//
+//LongNumb sum = num1 + num2;
+//cout << "num1 + num2 = ";
+//sum.Print();
+//
+//LongNumb difference = num1 - num2;
+//cout << "num1 - num2 = ";
+//difference.Print();
+//
+//LongNumb product = num1 * num2;
+//cout << "num1 * num2 = ";
+//product.Print();
+//
+//LongNumb quotient = num1 / num2;
+//cout << "num1 / num2 = ";
+//quotient.Print();
+//
+//LongNumb remainder = num1 % num2;
+//cout << "num1 mod num2 = ";
+//remainder.Print();
+//
+//cout << "\t" << endl;
+//
 //LongNumb squared = num1.LongPowerWindow(num1, LongNumb(2));
 //cout << "num1 ^ 2 = ";
 //squared.Print();
@@ -209,6 +213,47 @@ cout << "\t" << endl;
 //LongNumb power = num1.LongPowerWindow(num1, LongNumb(9));
 //cout << "num1 ^ 9 = ";
 //power.Print();
+
+
+
+LongNumb A("0x3e3d9a7f43698b6057bf789e640c2b779a6990ca3b323b89fba7297f5e9c86e635ec6b5f859c1a6144066ed009e884d7db0c82d79c306fc3745240ff8a31240923c8db248f05a4003ec9ef8e579636c2ad9561f24d2328d0ffbe3b3c66bd003d8150fee34de21a037af10fa5cd66042294404c3fcd5eac9eee462611cf479df7");
+LongNumb B("0x49e8fbc709682fd27b5374521000a9f7a84c1e31156eaf661db2cef3e738e9a05ed540487a805dd5098d19b5dd1eed610cff655279e2be39fb520c7713eb41258886210005a46e6de9311231b85da6d4f32c028847aa64bc04458861be442512db2056bae4a1d44d10d7013ddb5f8dcab1cc17f535d080974a219d4b0177fbf9");
+LongNumb cB("0x49e8fbc709682fd27b5374521000a9f7a84c1e31156eaf661db2cef3e738e9a05ed540487a805dd5098d19b5dd1eed610cff655279e2be39fb520c7713eb41258886210005a46e6de9311231b85da6d4f32c028847aa64bc04458861be442512db2056bae4a1d44d10d7013ddb5f8dcab1cc17f535d080974a219d4b0177fbf9");
+LongNumb N("0x1b37815d31c58266b4b80eec480567a24cc323e765f48e2b763918f434e108fa0699ac65a3340ebcb23dac90a4b750a70ed92018522c11e84d9b1190a35cc0a3db844ed8823e212bb50992a45692e8abc27f1d7e84f7217afe640b624dc4291d5c28536eebbf264b0b257ecb6b5dc77635dba985cb41db91b6c4a69a9b0aef83");
+LongNumb C;
+LongNumb result;
+result = result.gcd(A, B);
+
+result.Print();
+
+C = C.lcm(A, B);
+C.Print();
+
+A=A.BarrettReduction(A, N, N);
+B=B.BarrettReduction(B, N, N);
+
+
+LongNumb resultAdd = A.ModAdd(B, N);
+std::cout << "ModAdd result: ";
+resultAdd.Print();
+
+
+LongNumb resultSub = A.ModSub(B, N);
+std::cout << "ModSub result: ";
+resultSub.Print();
+
+LongNumb resultMult = A.ModMult(B, N);
+std::cout << "ModMult result: ";
+resultMult.Print();
+
+LongNumb resultSquare = resultSquare.ModSquare(A, N);
+std::cout << "ModSquare result: ";
+resultSquare.Print();
+
+LongNumb resultPow = resultPow.ModPow(A, cB, N);
+std::cout << "ModPow result: ";
+resultPow.Print();
+
 
 cout << "\t" << endl;
 cout << "\t" << endl;

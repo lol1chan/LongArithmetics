@@ -51,6 +51,31 @@ LongNumb::LongNumb(std::array<uint16_t, array_size> dataArray) {
     }
 }
 
+std::string LongNumb::removeLeadingZeros(const std::string& binaryString) const {
+    size_t firstOneIndex = binaryString.find('1');
+
+    if (firstOneIndex != std::string::npos) {
+        return binaryString.substr(firstOneIndex);
+    }
+    else {
+        
+        return binaryString.empty() ? "" : "0";
+    }
+}
+
+std::string LongNumb::toBinaryString() const {
+    std::string binaryString;
+    for (int i = data.size() - 1; i >= 0; i--) {
+        uint32_t value = data.at(i);
+
+        for (int j = 31; j >= 0; j--)
+            binaryString += (value & (1 << j)) ? '1' : '0';
+    }
+
+    
+    return removeLeadingZeros(binaryString);
+}
+
 std::string LongNumb::hexStringToUint16() const { 
     std::string result;
     result.reserve(4 * array_size);
@@ -116,7 +141,7 @@ bool LongNumb::operator != (const LongNumb& other) {
     return !(*this == other);
 }
 
-bool LongNumb::operator < (const LongNumb& other) {
+bool LongNumb::operator < (const LongNumb& other) const {
     int i = array_size - 1;
 
     while (i >= 0 && data[i] == other.data[i]) {
@@ -180,9 +205,9 @@ LongNumb LongNumb::operator+ (const LongNumb& other)
     return sum;
 }
 
-LongNumb LongNumb::operator- (const LongNumb& other) {
+LongNumb LongNumb::operator- (const LongNumb& other) const{
     if (*this < other) {
-        std::cerr << "Do not subtract a larger number from a smaller one" << std::endl;
+        //std::cerr << "Do not subtract a larger number from a smaller one" << std::endl;
         return LongNumb();
     }
     else {
@@ -261,7 +286,6 @@ LongNumb LongNumb::operator / (const LongNumb& other) {
         
         return LongNumb();
     }
-
    
 
     LongNumb A(*this);
@@ -359,21 +383,21 @@ LongNumb LongNumb::LongShiftBitsToHigh(int shiftCount) const {
 
 
 LongNumb LongNumb::operator << (int shiftCount) {
-    LongNumb result(*this); 
-    int shiftWords = shiftCount / 16; 
-    int shiftBits = shiftCount % 16; 
+    LongNumb result(*this);
+    int shiftWords = shiftCount / 16;
+    int shiftBits = shiftCount % 16;
 
-    
+
     for (int i = array_size - 1; i >= shiftWords; i--) {
         result.data[i] = result.data[i - shiftWords];
     }
 
-    
+
     for (int i = 0; i < shiftWords; i++) {
         result.data[i] = 0;
     }
 
-    
+
     for (int i = array_size - 1; i >= 0; i--) {
         if (i >= 1) {
             result.data[i] = (result.data[i] << shiftBits) | (result.data[i - 1] >> (16 - shiftBits));
@@ -520,3 +544,120 @@ void LongNumb::appendChar(char hexDigit) {
     data[0] = (data[0] & 0x0FFF) | (value << 12);
 }
 
+LongNumb LongNumb::gcd(LongNumb& A, LongNumb& B) {
+    LongNumb tA = A;
+    LongNumb tB = B;
+    
+    if (tA == tB)
+        return tA;
+
+    if (tA == LongNumb(0))
+        return tB;
+
+    if (tB == LongNumb(0))
+        return tA;
+
+    if (tB > tA) {
+        LongNumb temp = tA;
+        tA = tB;
+        tB = temp;
+    }
+
+    while (tB != LongNumb(0)) {
+        LongNumb temp = tB;
+        tB = tA % tB;
+        tA = temp;
+    }
+
+    return tA;
+}
+
+LongNumb LongNumb::lcm(LongNumb& A, LongNumb& B) {
+    LongNumb C;
+    C = A * B / gcd(A, B);
+    return C;
+}
+
+LongNumb LongNumb::BarrettReduction(const LongNumb& A, const LongNumb& B, const LongNumb& C) {
+    int k = B.DigitLength();
+
+    LongNumb tA = A;
+    LongNumb tB = B;
+    LongNumb tC = Mu(C);
+
+    if (tA < tB) {
+        return tA;
+    }
+
+    LongNumb Q = tA >> 16*(k-1);
+    Q = Q * tC;
+    Q = Q >> 16*(k + 1);
+
+    LongNumb R = tA - (Q * tB);
+
+    while (R >= tB) {
+        R = R - tB;
+    }
+
+    return R;
+}
+
+
+LongNumb LongNumb::Mu(const LongNumb& A) {
+    LongNumb B("1");
+    int length = A.DigitLength();
+    B = B << (32 * length);
+    LongNumb temp;
+    temp = B / A;
+    return temp;
+}
+
+LongNumb LongNumb::ModAdd(LongNumb& other, const LongNumb m) {
+    LongNumb result;
+    result = *this + other;
+    result = result.BarrettReduction(result, m, m);
+    return result;
+}
+
+LongNumb LongNumb::ModSub(LongNumb& other, const LongNumb m) {
+    LongNumb result;
+    if (*this >= other)
+        result = *this - other;
+    else
+        result = *this + (m - other);
+
+    return result;
+}
+
+LongNumb LongNumb::ModMult(LongNumb& other, const LongNumb m) {
+    LongNumb result;
+
+    result = *this * other;   
+    result = result.BarrettReduction(result, m, m);
+
+    return result;
+}
+
+LongNumb LongNumb::ModPow(const LongNumb& A, const LongNumb& B, const LongNumb m) {
+    LongNumb result("1");
+    LongNumb tB = B;
+    LongNumb C = A;
+
+#pragma omp parallel for
+    for (int i = tB.LongBitLength() - 1; i >= 0; i--) {
+        result = BarrettReduction(result * result, m, m);
+
+        if (tB.data[i / 16] & (1 << (i % 16))) {
+            result = BarrettReduction(result * C, m, m);
+        }
+    }
+
+    return result;
+}
+
+
+LongNumb LongNumb::ModSquare(LongNumb& A, const LongNumb m) {
+    LongNumb s;
+    s = A.ModMult(A, m);
+    return s;
+}
