@@ -8,14 +8,14 @@
 #include <cmath>
 #include <sstream>
 #include <iomanip>
-#include <algorithm>
 #include <math.h>
 #include <array>
 #include <ostream>
 #include <cstdlib>
 #include <ctime>
 #include <omp.h>
-#define array_size 256
+#include <random>
+#define array_size 129
 
 
 class LongNumb {
@@ -41,6 +41,7 @@ public:
     LongNumb LongPowerWindow(const LongNumb& A, const LongNumb& B);
     int DigitLength() const;
     void generateRandomHex(int length);
+    std::string GenHex(int length);
    
     void appendChar(char hexDigit);
 

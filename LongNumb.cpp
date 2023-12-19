@@ -195,6 +195,7 @@ LongNumb LongNumb::operator+ (const LongNumb& other)
     LongNumb sum;
     uint16_t carry = 0;
 
+#pragma omp parallel for
     for (int i = 0; i < array_size; i++)
     {
         uint32_t temp = static_cast<uint32_t>(data[i]) + other.data[i] + carry;
@@ -241,6 +242,7 @@ LongNumb LongNumb::multiplyByDigit(const uint16_t digit) const {
     LongNumb res;
     uint32_t carry = 0;
 
+#pragma omp parallel for
     for (int i = 0; i < array_size; i++) {
         uint32_t temp = static_cast<uint32_t>(data[i]) * digit + carry;
         res.data[i] = static_cast<uint16_t>(temp & 0xFFFF);
@@ -583,7 +585,7 @@ LongNumb LongNumb::BarrettReduction(const LongNumb& A, const LongNumb& B, const 
 
     LongNumb tA = A;
     LongNumb tB = B;
-    LongNumb tC = Mu(C);
+    LongNumb tC = C;
 
     if (tA < tB) {
         return tA;
@@ -615,7 +617,8 @@ LongNumb LongNumb::Mu(const LongNumb& A) {
 LongNumb LongNumb::ModAdd(LongNumb& other, const LongNumb m) {
     LongNumb result;
     result = *this + other;
-    result = result.BarrettReduction(result, m, m);
+    LongNumb tm = Mu(m);
+    result = result.BarrettReduction(result, m, tm);
     return result;
 }
 
@@ -633,7 +636,8 @@ LongNumb LongNumb::ModMult(LongNumb& other, const LongNumb m) {
     LongNumb result;
 
     result = *this * other;   
-    result = result.BarrettReduction(result, m, m);
+    LongNumb tm = Mu(m);
+    result = result.BarrettReduction(result, m, tm);
 
     return result;
 }
@@ -642,13 +646,14 @@ LongNumb LongNumb::ModPow(const LongNumb& A, const LongNumb& B, const LongNumb m
     LongNumb result("1");
     LongNumb tB = B;
     LongNumb C = A;
+    LongNumb tm = Mu(m);
 
 #pragma omp parallel for
     for (int i = tB.LongBitLength() - 1; i >= 0; i--) {
-        result = BarrettReduction(result * result, m, m);
+        result = BarrettReduction(result * result, m, tm);
 
         if (tB.data[i / 16] & (1 << (i % 16))) {
-            result = BarrettReduction(result * C, m, m);
+            result = BarrettReduction(result * C, m, tm);
         }
     }
 
@@ -660,4 +665,19 @@ LongNumb LongNumb::ModSquare(LongNumb& A, const LongNumb m) {
     LongNumb s;
     s = A.ModMult(A, m);
     return s;
+}
+
+std::string LongNumb::GenHex(int length) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 15);
+
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');
+
+    for (int i = 0; i < length; ++i) {
+        ss << std::setw(1) << dis(gen);
+    }
+
+    return ss.str();
 }

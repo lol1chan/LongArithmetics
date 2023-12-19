@@ -17,17 +17,17 @@ double measureTime(Func&& func) {
     return duration_cast<nanoseconds>(end - start).count();
 }
 
-template <typename T>
-LongNumb generateRandomHexNumber(T length) {
+
+LongNumb generateRandomHexNumber(int length) {
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<int> dis(0, 15);
 
     LongNumb num;
-    for (T i = 0; i < length; ++i) {
+    for (int i = 0; i < length-1; ++i) {
         int randomDigit = dis(gen);
         char digit = static_cast<char>(randomDigit < 10 ? '0' + randomDigit : 'a' + randomDigit - 10);
-        num.appendChar(digit); \
+        num.appendChar(digit);
     }
     return num;
 }
@@ -45,6 +45,7 @@ void runTests(T length) {
     for (int i = 0; i < NUM_TESTS; i++) {
         LongNumb num1 = generateRandomHexNumber(length);
         LongNumb num2 = generateRandomHexNumber(length);
+
 
         AdditionTime += measureTime([&] { LongNumb resultAdd = num1 + num2; });
         SubtractionTime += measureTime([&] { LongNumb resultSub = num1 - num2; });
@@ -71,6 +72,39 @@ void runTests(T length) {
     cout << "Average Mod Time: " << AverModTime << " nanoseconds" << endl;
     cout << "Average Square Time: " << AverSquareTime << " nanoseconds" << endl;
     cout << "Average Pow Time: " << AverPowTime << " nanoseconds" << endl;
+    cout << "\t" << endl;
+}
+
+void runTestsMod(int length) {
+    double ModAddTime = 0.0;
+    double ModSubTime = 0.0;
+    double ModMultTime = 0.0;
+    double ModSquareTime = 0.0;
+    double ModPowTime = 0.0;
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        LongNumb num1 = num1.GenHex(length);
+        LongNumb num2 = num2.GenHex(length);
+        LongNumb num3 = num3.GenHex(length);
+        ModAddTime += measureTime([&] { LongNumb resultAdd = num1.ModAdd(num2, num3); });
+        ModSubTime += measureTime([&] { LongNumb resultSub = num1.ModSub(num2, num3); });
+        ModMultTime += measureTime([&] { LongNumb resultMult = num1.ModMult(num2, num3); });
+        ModSquareTime += measureTime([&] { LongNumb resultSquare = resultSquare.ModSquare(num1, num3); });
+        ModPowTime += measureTime([&] { LongNumb resultPow = num1.ModPow(num1, LongNumb(9), num3); });
+    }
+
+    double AverModAddTime = ModAddTime / NUM_TESTS;
+    double AverModSubTime = ModSubTime / NUM_TESTS;
+    double AverModMultTime = ModMultTime / NUM_TESTS;
+    double AverModSquareTime = ModSquareTime / NUM_TESTS;
+    double AverModPowTime = ModPowTime / NUM_TESTS;
+
+    cout << "Length " << length << endl;
+    cout << "Average ModAdd Time: " << AverModAddTime << " nanoseconds" << endl;
+    cout << "Average ModSub Time: " << AverModSubTime << " nanoseconds" << endl;
+    cout << "Average ModMult Time: " << AverModMultTime << " nanoseconds" << endl;
+    cout << "Average ModSquare Time: " << AverModSquareTime << " nanoseconds" << endl;
+    cout << "Average ModPow Time: " << AverModPowTime << " nanoseconds" << endl;
     cout << "\t" << endl;
 }
 
@@ -257,5 +291,15 @@ resultPow.Print();
 
 cout << "\t" << endl;
 cout << "\t" << endl;
+
+
+//runTestsMod(2);
+//runTestsMod(50);
+
+cout << "\t" << endl;
+cout << "\t" << endl;
+
+return 0;
+
 }
 
